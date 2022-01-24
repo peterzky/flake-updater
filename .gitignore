@@ -1,0 +1,6 @@
+/.cache/
+/.direnv/
+/.envrc
+/compile_commands.json
+/result
+/builddir/
