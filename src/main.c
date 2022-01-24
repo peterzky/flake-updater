@@ -7,8 +7,9 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  /* printf("%s", argv[1]); */
-  walk_dir(argv[1]);
+  List list = {0};
+  walk_dir(argv[1], &list);
+  list_print(&list);
 
   return 0;
 }

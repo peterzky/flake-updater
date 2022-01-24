@@ -1,13 +1,25 @@
 #define _DEFAULT_SOURCE
+#include "dir.h"
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 
-void walk_dir(const char *path) {
-  DIR *dir;
+void list_print(List *list) {
+  for (size_t i = 0; i < list->current; ++i)
+    printf("%s\n", list->strings[i]);
+}
 
+void list_push(List *list, const char *path) {
+  strcpy(list->strings[list->current], path);
+  list->current++;
+}
+
+void walk_dir(const char *path, List *list) {
+  DIR *dir;
+  char next_path[255];
+  char suffix[5];
   struct dirent *ent;
 
   dir = opendir(path);
@@ -16,16 +28,20 @@ void walk_dir(const char *path) {
     // ignore dot directories
     if (ent->d_name[0] == '.' || ent->d_name[1] == '.')
       continue;
-    char next_path[255];
+
     if (ent->d_type == DT_DIR) {
       sprintf(next_path, "%s/%s", path, ent->d_name);
-      printf("DIR: %s\n", next_path);
-      walk_dir(next_path);
+      walk_dir(next_path, list);
     }
 
-    if (ent->d_type == DT_REG)
-      sprintf(next_path, "%s/%s", path, ent->d_name);
-    printf("%s\n", next_path);
+    if (ent->d_type == DT_REG) {
+
+      strcpy(suffix, &ent->d_name[strlen(ent->d_name) - 4]);
+      if (strcmp(suffix, "json") == 0) {
+        sprintf(next_path, "%s/%s", path, ent->d_name);
+        list_push(list, next_path);
+      }
+    }
   }
 
   (void)closedir(dir);
