@@ -13,13 +13,13 @@ void walk_dir(const char *path) {
   dir = opendir(path);
 
   while ((ent = readdir(dir)) != NULL) {
-
-    if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0) {
+    // ignore dot directories
+    if (ent->d_name[0] == '.' || ent->d_name[1] == '.')
       continue;
-    }
     char next_path[255];
     if (ent->d_type == DT_DIR) {
       sprintf(next_path, "%s/%s", path, ent->d_name);
+      printf("DIR: %s\n", next_path);
       walk_dir(next_path);
     }
 
