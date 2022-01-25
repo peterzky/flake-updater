@@ -6,4 +6,11 @@ project('updater', 'c',
 libuv = dependency('libuv')
 json = dependency('json-c')
 
-exe = executable('main', ['src/main.c', 'src/dir.h', 'src/dir.c'], dependencies: [json, libuv], install : true)
+exe = executable('main',
+                 ['src/main.c',
+                  'src/dir.h',
+                  'src/dir.c',
+                  'src/pkg.h',
+                  'src/pkg.c'],
+                 dependencies: [json, libuv],
+                 install : true)
