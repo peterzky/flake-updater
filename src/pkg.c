@@ -27,8 +27,8 @@ void package_dump(Package *pkg) {
   FILE *fp;
   fp = fopen(pkg->path, "w");
   fprintf(fp,
-          "{\n  'owner':'%s',\n  'repo':'%s',\n  'rev': '%s',\n  "
-          "'sha256':'%s'\n}\n",
+          "{\n  \"owner\":\"%s\",\n  \"repo\":\"%s\",\n  \"rev\":\"%s\",\n  "
+          "\"sha256\":\"%s\"\n}",
           pkg->owner, pkg->repo, pkg->rev, pkg->sha256);
   fclose(fp);
 }
@@ -57,7 +57,6 @@ void package_load(const char *path, Package *pkg) {
   strcpy(pkg->repo, json_object_get_string(repo));
   strcpy(pkg->rev, json_object_get_string(rev));
   strcpy(pkg->sha256, json_object_get_string(sha256));
-
 }
 
 void package_load_prefetch(FILE *fp, Package *pkg) {
