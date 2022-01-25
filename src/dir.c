@@ -35,7 +35,6 @@ void walk_dir(const char *path, List *list) {
     }
 
     if (ent->d_type == DT_REG) {
-
       strcpy(suffix, &ent->d_name[strlen(ent->d_name) - 4]);
       if (strcmp(suffix, "json") == 0) {
         sprintf(next_path, "%s/%s", path, ent->d_name);
