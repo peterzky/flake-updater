@@ -1,9 +1,5 @@
 {
-  description = ''Meson C Flake Template
-  export compile_commands.json
-  nix develop
-  meson setup builddir
-  ln -s builddir/compile_commands.json .'';
+  description = "flake updater written in C";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/master";
@@ -17,13 +13,13 @@
       in
       rec {
         packages = {
-          meson_c = pkgs.callPackage ./default.nix { };
+          flake-updater = pkgs.callPackage ./default.nix { };
         };
-        defaultPackage = packages.meson_c;
+        defaultPackage = packages.flake-updater;
 
         devShell = pkgs.mkShell {
           name = "flake-updater";
-          inputsFrom = [ packages.meson_c ];
+          inputsFrom = [ packages.flake-updater ];
           buildInputs = with pkgs; [ clang-tools ];
           shellHook = ''
             update () {

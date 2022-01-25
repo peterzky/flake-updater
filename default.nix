@@ -1,6 +1,6 @@
-{ stdenv, meson, ninja, pkg-config, libuv, json_c }:
+{ stdenv, meson, ninja, pkg-config, json_c }:
 stdenv.mkDerivation rec {
-  pname = "meson_c";
+  pname = "flake-updater";
   version = "0.0.1";
 
   src = ./.;
@@ -9,7 +9,6 @@ stdenv.mkDerivation rec {
     meson
     ninja
     pkg-config
-    libuv
     json_c
   ];
 
