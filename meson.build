@@ -3,8 +3,9 @@ project('updater', 'c',
         default_options : ['warning_level=3',
                            'c_std=c11'])
 
-libuv = dependency('libuv')
-json = dependency('json-c')
+# libuv_dep = dependency('libuv')
+json_dep = dependency('json-c')
+thread_dep = dependency('threads')
 
 exe = executable('main',
                  ['src/main.c',
@@ -12,5 +13,5 @@ exe = executable('main',
                   'src/dir.c',
                   'src/pkg.h',
                   'src/pkg.c'],
-                 dependencies: [json, libuv],
+                 dependencies: [json_dep, thread_dep],
                  install : true)

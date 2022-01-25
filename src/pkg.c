@@ -23,16 +23,22 @@ void package_print(Package *pkg) {
          pkg->rev, pkg->sha256);
 }
 
-void package_dump(FILE *fp, Package *pkg) {
+void package_dump(Package *pkg) {
+  FILE *fp;
+  fp = fopen(pkg->path, "w");
   fprintf(fp,
           "{\n  'owner':'%s',\n  'repo':'%s',\n  'rev': '%s',\n  "
           "'sha256':'%s'\n}\n",
           pkg->owner, pkg->repo, pkg->rev, pkg->sha256);
+  fclose(fp);
 }
 
-void package_load(FILE *fp, Package *pkg) {
+void package_load(const char *path, Package *pkg) {
+  FILE *f;
+  f = fopen(path, "r");
   char buffer[1024];
-  fread(buffer, 1024, 1, fp);
+  fread(buffer, 1024, 1, f);
+  fclose(f);
 
   struct json_object *parsed_json;
   struct json_object *owner;
@@ -46,10 +52,12 @@ void package_load(FILE *fp, Package *pkg) {
   json_object_object_get_ex(parsed_json, "rev", &rev);
   json_object_object_get_ex(parsed_json, "sha256", &sha256);
 
+  strcpy(pkg->path, path);
   strcpy(pkg->owner, json_object_get_string(owner));
   strcpy(pkg->repo, json_object_get_string(repo));
   strcpy(pkg->rev, json_object_get_string(rev));
   strcpy(pkg->sha256, json_object_get_string(sha256));
+
 }
 
 void package_load_prefetch(FILE *fp, Package *pkg) {
@@ -65,7 +73,7 @@ void package_load_prefetch(FILE *fp, Package *pkg) {
   strcpy(pkg->sha256, json_object_get_string(sha256));
 }
 
-void package_update(Package *pkg, FILE *f) {
+void package_update(Package *pkg) {
   char command[255] = {0};
   Package updated_pkg = {0};
   sprintf(command, "nix-prefetch-git --quiet https://github.com/%s/%s.git",
@@ -76,6 +84,6 @@ void package_update(Package *pkg, FILE *f) {
   fclose(fp);
   if (package_cmp(pkg, &updated_pkg) == 0) {
     package_modify(pkg, &updated_pkg);
-    package_dump(f, pkg);
+    package_dump(pkg);
   }
 }
