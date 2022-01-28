@@ -7,7 +7,7 @@ project('updater', 'c',
 json_dep = dependency('json-c')
 thread_dep = dependency('threads')
 
-exe = executable('main',
+exe = executable('flake-updater',
                  ['src/main.c',
                   'src/dir.h',
                   'src/dir.c',
